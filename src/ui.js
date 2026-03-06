@@ -15,11 +15,10 @@ export function showState(stateId) {
         processingView.classList.remove('hidden');
     } else if (stateId === 'success') {
         successView.classList.remove('hidden');
-        renderGlobalMetrics();
     }
 }
 
-async function renderGlobalMetrics() {
+export async function renderGlobalMetrics() {
     const kpiDashboard = document.getElementById('kpi-dashboard');
     const kpiUses = document.getElementById('kpi-uses');
     const kpiImages = document.getElementById('kpi-images');

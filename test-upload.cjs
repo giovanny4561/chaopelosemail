@@ -6,7 +6,7 @@ const { chromium } = require('playwright');
 
     try {
         console.log('Navegando a la app local...');
-        await page.goto('http://localhost:5173/');
+        await page.goto('http://127.0.0.1:8080/');
 
         // Fill credentials
         console.log('Llenando datos de Cloudinary (dummy)...');

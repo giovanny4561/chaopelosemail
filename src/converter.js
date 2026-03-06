@@ -2,7 +2,7 @@ import JSZip from 'jszip';
 import {
     showState, showError, updateProgress,
     setStepActive, setStepDone, updateImagesCount,
-    updateSuccessCount
+    updateSuccessCount, renderGlobalMetrics
 } from './ui.js';
 import { logConversionMetrics } from './db.js';
 
@@ -208,6 +208,9 @@ async function handleFile(file) {
 
             showState('success');
             updateSuccessCount(imagesToUpload.length);
+
+            // Fetch latest global KPIs
+            renderGlobalMetrics();
 
             // Try to update usage quota since we just uploaded images
             window.fetchCloudinaryUsage?.();

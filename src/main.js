@@ -1,5 +1,6 @@
 import './style.css';
 import { initConverter } from './converter.js';
+import { renderGlobalMetrics } from './ui.js';
 
 const SESSION_KEY = 'canvaToSalesforce_auth';
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 1 week
@@ -92,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     viewApp.classList.remove('hidden');
     initConverter(); // Initialize converter logic only when authenticated
     fetchCloudinaryUsage();
+    renderGlobalMetrics();
   }
 
   async function fetchCloudinaryUsage() {
