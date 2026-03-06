@@ -99,13 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const textElement = document.getElementById('quota-text');
 
     badge.classList.remove('hidden');
-    textElement.textContent = 'Cargando almacenamiento...';
+    textElement.textContent = 'Cargando...';
 
     try {
       const response = await fetch('/api/usage');
       if (response.ok) {
         const data = await response.json();
-        textElement.textContent = `Almacenamiento: ${data.usageGB} GB / ${data.limitGB} GB (${data.percentage}%)`;
+        textElement.textContent = `${data.usageGB} GB / ${data.limitGB} GB (${data.percentage}%)`;
 
         if (parseFloat(data.percentage) > 90) {
           textElement.style.color = '#ff5252';
@@ -116,11 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         console.warn('Failed to fetch usage:', await response.text());
-        textElement.textContent = 'Almacenamiento: Disp. (Vercel Req.)';
+        textElement.textContent = 'Disp. (Vercel Req.)';
       }
     } catch (err) {
       console.error('Error fetching usage:', err);
-      textElement.textContent = 'Almacenamiento: Disp. (Vercel Req.)';
+      textElement.textContent = 'Disp. (Vercel Req.)';
     }
   }
 
