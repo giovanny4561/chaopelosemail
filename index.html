@@ -31,13 +31,14 @@
           <path d="M8 8L12 4L16 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" />
         </svg>
-        <h1>LilaConverter Canva2SF</h1>
+        <h1 style="white-space: nowrap; margin: 0;">LilaConverter Canva2SF</h1>
       </div>
 
       <!-- Usage Quota Badge -->
       <div id="quota-badge" class="hidden"
-        style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem 1rem; border-radius: 99px; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; backdrop-filter: blur(10px);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem 1rem; border-radius: 99px; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; backdrop-filter: blur(10px); white-space: nowrap;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="flex-shrink: 0;">
           <path d="M20.5 13L20.5 10C20.5 7.79086 16.6944 6 12 6C7.30558 6 3.5 7.79086 3.5 10L3.5 13"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           <path d="M20.5 17C20.5 19.2091 16.6944 21 12 21C7.30558 21 3.5 19.2091 3.5 17" stroke="currentColor"
@@ -163,10 +164,44 @@
 
       <footer class="app-footer"
         style="text-align: center; margin-top: 2rem; color: var(--text-secondary); font-size: 0.875rem;">
+        <span id="trial-footer-text" style="display:block; margin-bottom: 0.5rem; font-weight: 500;"></span>
         Creado con ❤️ por <a href="https://www.serestudiobranding.com" target="_blank"
           style="color: var(--primary); text-decoration: none;">www.serestudiobranding.com</a>
       </footer>
     </main>
+  </div>
+
+  <!-- Trial Popups -->
+  <div id="trial-welcome-popup" class="hidden"
+    style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+    <div
+      style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 1rem; text-align: center; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #ffffff;">
+      <h2 style="margin-bottom: 1rem; color: var(--primary);">¡Bienvenido!</h2>
+      <p style="margin-bottom: 2rem; color: #cbd5e1; line-height: 1.5;">Tienes una prueba gratuita por 15
+        días para usar LilaConverter Canva2SF.</p>
+      <button id="btn-close-welcome" class="btn btn-primary" style="width: 100%;">Comenzar a usar</button>
+    </div>
+  </div>
+
+  <div id="trial-expired-popup" class="hidden"
+    style="position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+    <div
+      style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 1rem; text-align: center; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #ffffff;">
+      <div style="color: #ff5252; margin-bottom: 1.5rem;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="margin: 0 auto;">
+          <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <path d="M12 16.01L12.01 15.9989" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+        </svg>
+      </div>
+      <h2 style="margin-bottom: 1rem; color: #ff5252;">Prueba Finalizada</h2>
+      <p style="margin-bottom: 2rem; color: #cbd5e1; line-height: 1.5;">Tus 15 días de prueba gratuita han
+        terminado. <br /><br />Para continuar usándolo, contacte con el administrador.</p>
+      <a href="https://www.serestudiobranding.com" target="_blank" class="btn btn-primary"
+        style="width: 100%; text-decoration: none; display: inline-block;">Contactar Administrador</a>
+    </div>
   </div>
 
   <script type="module" src="/src/main.js"></script>

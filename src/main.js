@@ -4,12 +4,67 @@ import { initConverter } from './converter.js';
 const SESSION_KEY = 'canvaToSalesforce_auth';
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 1 week
 
+const TRIAL_KEY = 'canvaToSalesforce_trial';
+const TRIAL_DURATION_DAYS = 15;
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
 document.addEventListener('DOMContentLoaded', () => {
   const viewLogin = document.getElementById('view-login');
   const viewApp = document.getElementById('view-app');
   const loginForm = document.getElementById('login-form');
   const passwordInput = document.getElementById('password');
   const loginError = document.getElementById('login-error');
+
+  // Trial DOM
+  const welcomePopup = document.getElementById('trial-welcome-popup');
+  const expiredPopup = document.getElementById('trial-expired-popup');
+  const closeWelcomeBtn = document.getElementById('btn-close-welcome');
+  const footerText = document.getElementById('trial-footer-text');
+
+  closeWelcomeBtn?.addEventListener('click', () => {
+    welcomePopup.classList.add('hidden');
+    // Mute welcome for remainder of device usage
+    localStorage.setItem('canva_welcome_shown', 'true');
+  });
+
+  function getTrialData() {
+    const rawData = localStorage.getItem(TRIAL_KEY);
+    if (!rawData) return null;
+    return JSON.parse(rawData);
+  }
+
+  function handleTrialLogic() {
+    let trialData = getTrialData();
+
+    // If no trial data exists, this is their first successful login
+    if (!trialData) {
+      trialData = {
+        startDate: Date.now()
+      };
+      localStorage.setItem(TRIAL_KEY, JSON.stringify(trialData));
+    }
+
+    const elapsedMs = Date.now() - trialData.startDate;
+    const elapsedDays = Math.floor(elapsedMs / MS_PER_DAY);
+    const daysLeft = Math.max(0, TRIAL_DURATION_DAYS - elapsedDays);
+
+    if (daysLeft === 0) {
+      // Trial expired
+      expiredPopup.classList.remove('hidden');
+      welcomePopup.classList.add('hidden');
+      viewApp.classList.add('hidden'); // Ensure app is hidden behind the blur
+      return false; // Blocks app
+    } else {
+      // Active trial
+      footerText.textContent = `Quedan ${daysLeft} días de prueba gratuita.`;
+
+      // Show welcome popup only once per browser session
+      if (!sessionStorage.getItem('canva_welcome_shown')) {
+        welcomePopup.classList.remove('hidden');
+      }
+      return true; // Allows app
+    }
+  }
 
   function checkSession() {
     const savedSession = localStorage.getItem(SESSION_KEY);
@@ -29,6 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showApp() {
     viewLogin.classList.add('hidden');
+
+    // Evaluate trial before showing app
+    const isTrialActive = handleTrialLogic();
+    if (!isTrialActive) return; // Blocked by expired trial
+
     viewApp.classList.remove('hidden');
     initConverter(); // Initialize converter logic only when authenticated
     fetchCloudinaryUsage();
@@ -72,8 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // On Load
-  if (checkSession()) {
-    showApp();
+  const currentRole = checkSession();
+  if (currentRole) {
+    showApp(currentRole);
   } else {
     showLogin();
   }
@@ -83,15 +144,18 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const pwd = passwordInput.value;
 
-    if (pwd === '777') {
+    if (pwd === '777' || pwd === '6004') {
+      const role = pwd === '6004' ? 'admin' : 'user';
+
       // Save successful session timestamp
       localStorage.setItem(SESSION_KEY, JSON.stringify({
         authenticated: true,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        role: role
       }));
 
       loginError.classList.add('hidden');
-      showApp();
+      showApp(role);
     } else {
       // Wrong password
       loginError.classList.remove('hidden');
