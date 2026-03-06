@@ -188,6 +188,11 @@ async function handleFile(file) {
             newHtmlContent = newHtmlContent.replace(regex2, url);
         });
 
+        // Ensure a meta charset tag exists for platforms like Salesforce that might ignore the BOM
+        if (!newHtmlContent.toLowerCase().includes('charset=utf-8') && !newHtmlContent.toLowerCase().includes('charset="utf-8"')) {
+            newHtmlContent = newHtmlContent.replace('<head>', '<head>\n    <meta charset="utf-8">');
+        }
+
         updateProgress(95, 'Generando archivo final...');
         // Add UTF-8 BOM (\ufeff) to force browsers and Salesforce to read it correctly
         window.convertedHtmlBlob = new Blob(['\ufeff', newHtmlContent], { type: 'text/html;charset=utf-8' });
