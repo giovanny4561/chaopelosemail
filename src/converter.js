@@ -4,6 +4,7 @@ import {
     setStepActive, setStepDone, updateImagesCount,
     updateSuccessCount
 } from './ui.js';
+import { logConversionMetrics } from './db.js';
 
 export function initConverter() {
     const dropZone = document.getElementById('drop-zone');
@@ -201,7 +202,10 @@ async function handleFile(file) {
         updateProgress(100, '¡Proceso finalizado!');
 
         // 5. Show Success Screen
-        setTimeout(() => {
+        setTimeout(async () => {
+            // Log to Supabase silently
+            await logConversionMetrics(imagesToUpload.length);
+
             showState('success');
             updateSuccessCount(imagesToUpload.length);
 

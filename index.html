@@ -141,8 +141,33 @@
           </div>
           <h3>¡Conversión Completada!</h3>
           <p>Se encontraron y subieron <strong id="success-count">0</strong> imágenes exitosamente.</p>
-          <p class="success-note">Tu HTML ahora contiene enlaces optimizados y está 100% listo para importarse en
-            Salesforce.</p>
+          <p class="success-note" style="margin-bottom: 1.5rem;">Tu HTML ahora contiene enlaces optimizados y está 100%
+            listo para importarse en Salesforce.</p>
+
+          <div class="kpi-grid" id="kpi-dashboard"
+            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; opacity: 0; transition: opacity 0.5s ease;">
+            <div class="kpi-card"
+              style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
+              <span style="font-size: 1.5rem; color: var(--primary-color);" id="kpi-uses">--</span>
+              <span
+                style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Usos
+                Globales</span>
+            </div>
+            <div class="kpi-card"
+              style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
+              <span style="font-size: 1.5rem; color: #a371f7;" id="kpi-images">--</span>
+              <span
+                style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Imágenes
+                Total</span>
+            </div>
+            <div class="kpi-card"
+              style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
+              <span style="font-size: 1.5rem; color: #34d399;" id="kpi-time">--</span>
+              <span
+                style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Minutos
+                Ahorrados</span>
+            </div>
+          </div>
 
           <div class="success-actions">
             <button id="btn-download" class="btn btn-primary btn-large">

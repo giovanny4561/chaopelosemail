@@ -1,3 +1,5 @@
+import { getGlobalMetrics } from './db.js';
+
 export function showState(stateId) {
     const dropZone = document.getElementById('drop-zone');
     const processingView = document.getElementById('processing-view');
@@ -13,7 +15,27 @@ export function showState(stateId) {
         processingView.classList.remove('hidden');
     } else if (stateId === 'success') {
         successView.classList.remove('hidden');
+        renderGlobalMetrics();
     }
+}
+
+async function renderGlobalMetrics() {
+    const kpiDashboard = document.getElementById('kpi-dashboard');
+    const kpiUses = document.getElementById('kpi-uses');
+    const kpiImages = document.getElementById('kpi-images');
+    const kpiTime = document.getElementById('kpi-time');
+
+    // Fallbacks while loading
+    kpiUses.textContent = '...';
+    kpiImages.textContent = '...';
+    kpiTime.textContent = '...';
+    kpiDashboard.style.opacity = '1';
+
+    const metrics = await getGlobalMetrics();
+
+    kpiUses.textContent = metrics?.uses || '0';
+    kpiImages.textContent = metrics?.images || '0';
+    kpiTime.textContent = metrics?.minutes || '0';
 }
 
 // UI Feedback
