@@ -87,7 +87,7 @@ async function uploadToCloudinary(base64Data, cloudName, uploadPreset) {
 
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Error al subir imagen a Cloudinary');
+        throw new Error(errorData.error?.message || 'Error al procesar la imagen en el servidor');
     }
 
     const data = await response.json();
@@ -151,7 +151,7 @@ async function handleFile(file) {
         let uploadedUrls = {}; // { "filename.png": "https://res.cloudinary..." }
 
         if (imagesToUpload.length > 0) {
-            updateProgress(40, `Subiendo ${imagesToUpload.length} imágenes a Cloudinary...`);
+            updateProgress(40, `Procesando ${imagesToUpload.length} imágenes...`);
 
             // Upload concurrently but track progress
             let completed = 0;
@@ -198,6 +198,9 @@ async function handleFile(file) {
         setTimeout(() => {
             showState('success');
             updateSuccessCount(imagesToUpload.length);
+
+            // Try to update usage quota since we just uploaded images
+            window.fetchCloudinaryUsage?.();
         }, 500);
 
     } catch (err) {

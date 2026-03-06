@@ -31,7 +31,40 @@ document.addEventListener('DOMContentLoaded', () => {
     viewLogin.classList.add('hidden');
     viewApp.classList.remove('hidden');
     initConverter(); // Initialize converter logic only when authenticated
+    fetchCloudinaryUsage();
   }
+
+  async function fetchCloudinaryUsage() {
+    const badge = document.getElementById('quota-badge');
+    const textElement = document.getElementById('quota-text');
+
+    badge.classList.remove('hidden');
+    textElement.textContent = 'Cargando almacenamiento...';
+
+    try {
+      const response = await fetch('/api/usage');
+      if (response.ok) {
+        const data = await response.json();
+        textElement.textContent = `Almacenamiento: ${data.usageGB} GB / ${data.limitGB} GB (${data.percentage}%)`;
+
+        if (parseFloat(data.percentage) > 90) {
+          textElement.style.color = '#ff5252';
+        } else if (parseFloat(data.percentage) > 75) {
+          textElement.style.color = '#fbbf24';
+        } else {
+          textElement.style.color = 'inherit';
+        }
+      } else {
+        console.warn('Failed to fetch usage:', await response.text());
+        textElement.textContent = 'Almacenamiento: Disp. (Vercel Req.)';
+      }
+    } catch (err) {
+      console.error('Error fetching usage:', err);
+      textElement.textContent = 'Almacenamiento: Disp. (Vercel Req.)';
+    }
+  }
+
+  window.fetchCloudinaryUsage = fetchCloudinaryUsage;
 
   function showLogin() {
     viewLogin.classList.remove('hidden');
