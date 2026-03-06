@@ -53,10 +53,12 @@ export function initConverter() {
         window.convertedHtmlBlob = null;
 
         // Reset steps
-        ['step-extract', 'step-upload', 'step-rewrite'].forEach(id => {
+        ['step-extract', 'step-read-html', 'step-resize', 'step-format', 'step-upload', 'step-rewrite'].forEach(id => {
             const el = document.getElementById(id);
-            el.classList.remove('active', 'done');
-            el.classList.add('pending');
+            if (el) {
+                el.classList.remove('active', 'done');
+                el.classList.add('pending');
+            }
         });
     });
 
@@ -144,8 +146,27 @@ async function handleFile(file) {
         }
 
         updateImagesCount(imagesToUpload.length);
-        updateProgress(30, 'ZIP extraído, preparando subida...');
+        updateProgress(30, 'ZIP extraído, analizando código...');
         setStepDone('step-extract');
+
+        // Step 2: Read HTML
+        setStepActive('step-read-html');
+        await new Promise(resolve => setTimeout(resolve, 600));
+        setStepDone('step-read-html');
+
+        // Step 3: Resize images (simulated perception for local processing)
+        setStepActive('step-resize');
+        updateProgress(35, 'Comprimiendo capas...');
+        await new Promise(resolve => setTimeout(resolve, 800));
+        setStepDone('step-resize');
+
+        // Step 4: Convert format (simulated perception before upload)
+        setStepActive('step-format');
+        updateProgress(38, 'Adaptando formatos...');
+        await new Promise(resolve => setTimeout(resolve, 700));
+        setStepDone('step-format');
+
+        // Step 5: Upload mapping
         setStepActive('step-upload');
 
         // 3. Upload images directly to Cloudinary

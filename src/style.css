@@ -56,7 +56,7 @@ body {
   left: -10%;
   width: 50vw;
   height: 50vw;
-  background: radial-gradient(circle, rgba(88,166,255,0.4) 0%, rgba(13,17,23,0) 70%);
+  background: radial-gradient(circle, rgba(88, 166, 255, 0.4) 0%, rgba(13, 17, 23, 0) 70%);
 }
 
 .blob-2 {
@@ -64,14 +64,22 @@ body {
   right: -10%;
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(circle, rgba(163,113,247,0.3) 0%, rgba(13,17,23,0) 70%);
+  background: radial-gradient(circle, rgba(163, 113, 247, 0.3) 0%, rgba(13, 17, 23, 0) 70%);
   animation-delay: -10s;
 }
 
 @keyframes float {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(5%, 10%) scale(1.1); }
-  100% { transform: translate(-5%, 5%) scale(0.9); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(5%, 10%) scale(1.1);
+  }
+
+  100% {
+    transform: translate(-5%, 5%) scale(0.9);
+  }
 }
 
 /* App Container */
@@ -305,20 +313,29 @@ input:focus {
 
 .steps-list {
   list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+  margin-top: 1rem;
 }
 
 .step {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--border-color);
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid transparent;
+  /* Remove heavy borders */
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 0.75rem;
   color: var(--text-secondary);
   transition: var(--transition);
+  font-size: 0.85rem;
 }
 
 .step:last-child {
-  border-bottom: none;
+  border-bottom: 1px solid transparent;
 }
 
 .step-icon {
@@ -424,24 +441,53 @@ input:focus {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes popIn {
-  0% { transform: scale(0.5); opacity: 0; }
-  80% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  80% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.8); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(0.8); opacity: 0.5; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
 }
 
 .loader {
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   border-top: 2px solid #fff;
   width: 20px;
@@ -451,8 +497,13 @@ input:focus {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive */
@@ -460,7 +511,7 @@ input:focus {
   .glass-card {
     padding: 1.5rem;
   }
-  
+
   .upload-area {
     padding: 2rem 1rem;
   }
