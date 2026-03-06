@@ -189,7 +189,8 @@ async function handleFile(file) {
         });
 
         updateProgress(95, 'Generando archivo final...');
-        window.convertedHtmlBlob = new Blob([newHtmlContent], { type: 'text/html' });
+        // Add UTF-8 BOM (\ufeff) to force browsers and Salesforce to read it correctly
+        window.convertedHtmlBlob = new Blob(['\ufeff', newHtmlContent], { type: 'text/html;charset=utf-8' });
 
         setStepDone('step-rewrite');
         updateProgress(100, '¡Proceso finalizado!');
