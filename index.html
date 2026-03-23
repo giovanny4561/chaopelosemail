@@ -211,43 +211,29 @@
 
       <footer class="app-footer"
         style="text-align: center; margin-top: 2rem; color: var(--text-secondary); font-size: 0.875rem;">
-        <span id="trial-footer-text" style="display:block; margin-bottom: 0.5rem; font-weight: 500;"></span>
         Creado con ❤️ por <a href="https://www.serestudiobranding.com" target="_blank"
           style="color: var(--primary); text-decoration: none;">www.serestudiobranding.com</a>
       </footer>
     </main>
   </div>
 
-  <!-- Trial Popups -->
-  <div id="trial-welcome-popup" class="hidden"
+  <!-- Migration Notice Popup (once per day) -->
+  <div id="migration-notice-popup" class="hidden"
     style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
     <div
-      style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 1rem; text-align: center; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #ffffff;">
-      <h2 style="margin-bottom: 1rem; color: var(--primary);">¡Bienvenido!</h2>
-      <p style="margin-bottom: 2rem; color: #cbd5e1; line-height: 1.5;">Tienes una prueba gratuita por 15
-        días para usar LilaConverter Canva2SF.</p>
-      <button id="btn-close-welcome" class="btn btn-primary" style="width: 100%;">Comenzar a usar</button>
-    </div>
-  </div>
-
-  <div id="trial-expired-popup" class="hidden"
-    style="position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-    <div
-      style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 1rem; text-align: center; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #ffffff;">
-      <div style="color: #ff5252; margin-bottom: 1.5rem;">
+      style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 1rem; text-align: center; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #ffffff;">
+      <div style="margin-bottom: 1.5rem;">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-          style="margin: 0 auto;">
-          <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          <path d="M12 16.01L12.01 15.9989" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+          style="margin: 0 auto; color: #a371f7;">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
-      <h2 style="margin-bottom: 1rem; color: #ff5252;">Prueba Finalizada</h2>
-      <p style="margin-bottom: 2rem; color: #cbd5e1; line-height: 1.5;">Tus 15 días de prueba gratuita han
-        terminado. <br /><br />Para continuar usándolo, contacte con el administrador.</p>
-      <a href="https://wa.me/573145011767" target="_blank" class="btn btn-primary"
-        style="width: 100%; text-decoration: none; display: inline-block;">Contactar Administrador</a>
+      <h2 style="margin-bottom: 1rem; color: #a371f7;">Aviso Importante</h2>
+      <p style="margin-bottom: 2rem; color: #cbd5e1; line-height: 1.6;">
+        Este sistema será migrado al <strong style="color: #ffffff;">RAG de David Uribe</strong>.<br /><br />
+        Pronto contarás con una experiencia mejorada y más potente.
+      </p>
+      <button id="btn-close-migration" class="btn btn-primary" style="width: 100%;">Entendido</button>
     </div>
   </div>
 
