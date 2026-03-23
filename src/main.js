@@ -105,14 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const pwd = passwordInput.value;
 
-    if (pwd === '777' || pwd === '6004') {
-      const role = pwd === '6004' ? 'admin' : 'user';
-
+    if (pwd === '777') {
       // Save successful session timestamp
       localStorage.setItem(SESSION_KEY, JSON.stringify({
         authenticated: true,
-        timestamp: Date.now(),
-        role: role
+        timestamp: Date.now()
       }));
 
       loginError.classList.add('hidden');
