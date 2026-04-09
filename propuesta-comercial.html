@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propuesta Comercial – Ser Stacks para Chaopelos</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1a1a2e;
+      background: #fff;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 50px 60px;
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 28px;
+      border-bottom: 3px solid #6c63ff;
+      margin-bottom: 36px;
+    }
+
+    .brand-name {
+      font-size: 26px;
+      font-weight: 700;
+      color: #6c63ff;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-tagline {
+      font-size: 11px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .doc-meta {
+      text-align: right;
+      font-size: 11.5px;
+      color: #555;
+    }
+
+    .doc-meta strong {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+
+    /* DESTINATARIO */
+    .to-block {
+      background: #f7f7ff;
+      border-left: 4px solid #6c63ff;
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 36px;
+    }
+
+    .to-block .label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c63ff;
+      margin-bottom: 4px;
+    }
+
+    .to-block .company {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .to-block .detail {
+      font-size: 12px;
+      color: #555;
+      margin-top: 2px;
+    }
+
+    /* SECTION TITLES */
+    h2 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c63ff;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #ececff;
+    }
+
+    section {
+      margin-bottom: 32px;
+    }
+
+    /* DESCRIPCION */
+    .description p {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    /* PROBLEMA / SOLUCION */
+    .problem-solution {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      padding: 18px 20px;
+      border-radius: 10px;
+    }
+
+    .card.problem {
+      background: #fff5f5;
+      border: 1px solid #ffd6d6;
+    }
+
+    .card.solution {
+      background: #f0f7ff;
+      border: 1px solid #c3dffe;
+    }
+
+    .card .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+    }
+
+    .card.problem .card-title { color: #e53e3e; }
+    .card.solution .card-title { color: #3182ce; }
+
+    .card ul {
+      padding-left: 16px;
+      color: #444;
+    }
+
+    .card ul li {
+      margin-bottom: 5px;
+    }
+
+    /* METRICAS */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: linear-gradient(135deg, #6c63ff 0%, #8b85ff 100%);
+      color: white;
+      border-radius: 10px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .metric-number {
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      opacity: 0.85;
+      font-weight: 500;
+    }
+
+    /* INCLUYE */
+    .includes-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .includes-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      color: #333;
+      font-size: 12.5px;
+    }
+
+    .includes-list li::before {
+      content: "✓";
+      color: #6c63ff;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* PRICING */
+    .pricing-box {
+      background: #1a1a2e;
+      color: white;
+      border-radius: 12px;
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .pricing-label {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-bottom: 6px;
+    }
+
+    .pricing-amount {
+      font-size: 36px;
+      font-weight: 700;
+      color: #a89cff;
+      line-height: 1;
+    }
+
+    .pricing-period {
+      font-size: 14px;
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+
+    .pricing-note {
+      font-size: 11px;
+      opacity: 0.5;
+      margin-top: 6px;
+    }
+
+    .pricing-right {
+      text-align: right;
+    }
+
+    .iva-row {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    .total-row {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      margin-top: 8px;
+    }
+
+    /* CONDICIONES */
+    .conditions-list {
+      list-style: none;
+    }
+
+    .conditions-list li {
+      padding: 7px 0;
+      border-bottom: 1px solid #f0f0f0;
+      color: #444;
+      font-size: 12.5px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .conditions-list li:last-child {
+      border-bottom: none;
+    }
+
+    .conditions-list li .cond-label {
+      font-weight: 600;
+      color: #1a1a2e;
+      min-width: 140px;
+      flex-shrink: 0;
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 2px solid #6c63ff;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .footer .from-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .footer .from-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #6c63ff;
+    }
+
+    .signature-block {
+      text-align: right;
+    }
+
+    .signature-line {
+      border-top: 1px solid #999;
+      width: 180px;
+      margin-left: auto;
+      margin-bottom: 4px;
+    }
+
+    .signature-text {
+      font-size: 11px;
+      color: #888;
+    }
+
+    .validity-badge {
+      display: inline-block;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      color: #856404;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-top: 8px;
+    }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page { padding: 30px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <div class="brand-name">Ser Stacks</div>
+        <div class="brand-tagline">Soluciones digitales a medida</div>
+      </div>
+      <div class="doc-meta">
+        <strong>Propuesta Comercial</strong>
+        Ref: SS-2025-001<br>
+        Fecha: 9 de abril de 2025<br>
+        Vigencia: 30 días
+      </div>
+    </div>
+
+    <!-- DESTINATARIO -->
+    <div class="to-block">
+      <div class="label">Dirigido a</div>
+      <div class="company">Chaopelos</div>
+      <div class="detail">Propuesta de suscripción mensual – Convertidor de Correos para Salesforce</div>
+    </div>
+
+    <!-- DESCRIPCION -->
+    <section class="description">
+      <h2>Descripción del Servicio</h2>
+      <p>
+        Chaopelos utiliza Canva para diseñar correos electrónicos que luego deben enviarse desde Salesforce.
+        El proceso nativo implica descargar un archivo ZIP de Canva, extraer las imágenes, subirlas manualmente
+        a un servidor con URL pública, y reemplazar uno a uno los enlaces dentro del HTML — una tarea técnica
+        que consume tiempo y requiere conocimientos de programación.
+      </p>
+      <p>
+        <strong>Ser Stacks</strong> desarrolló y mantiene una plataforma web que automatiza todo ese flujo de
+        extremo a extremo: el usuario sube el ZIP de Canva y en segundos obtiene un HTML listo para usar en
+        Salesforce, sin tocar una sola línea de código.
+      </p>
+    </section>
+
+    <!-- PROBLEMA / SOLUCION -->
+    <div class="problem-solution">
+      <div class="card problem">
+        <div class="card-title">Sin el sistema</div>
+        <ul>
+          <li>Subir imágenes manualmente al servidor</li>
+          <li>Copiar y reemplazar cada URL en el HTML</li>
+          <li>Requiere conocimiento técnico</li>
+          <li>Alto riesgo de errores humanos</li>
+          <li>~33 min por correo procesado</li>
+        </ul>
+      </div>
+      <div class="card solution">
+        <div class="card-title">Con el sistema</div>
+        <ul>
+          <li>Un solo clic: subir el ZIP de Canva</li>
+          <li>Imágenes optimizadas y URLs reemplazadas automáticamente</li>
+          <li>Accesible para cualquier persona del equipo</li>
+          <li>Resultado consistente y sin errores</li>
+          <li>~1 min por correo procesado</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- METRICAS -->
+    <section>
+      <h2>Resultados Obtenidos hasta la Fecha</h2>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-number">28</div>
+          <div class="metric-label">Usos Globales</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">236</div>
+          <div class="metric-label">Imágenes Procesadas</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">944</div>
+          <div class="metric-label">Minutos Ahorrados</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INCLUYE -->
+    <section>
+      <h2>¿Qué incluye la suscripción?</h2>
+      <ul class="includes-list">
+        <li>Acceso continuo a la plataforma web</li>
+        <li>Procesamiento ilimitado de correos Canva</li>
+        <li>Optimización automática de imágenes</li>
+        <li>HTML listo para Salesforce en segundos</li>
+        <li>Alojamiento y almacenamiento en la nube</li>
+        <li>Actualizaciones y mejoras del sistema</li>
+        <li>Soporte técnico vía WhatsApp / correo</li>
+        <li>Sin límite de usuarios en el equipo</li>
+      </ul>
+    </section>
+
+    <!-- PRECIO -->
+    <section>
+      <h2>Inversión Mensual</h2>
+      <div class="pricing-box">
+        <div>
+          <div class="pricing-label">Suscripción mensual</div>
+          <div class="pricing-amount">$1.100.000</div>
+          <div class="pricing-period">COP / mes</div>
+          <div class="pricing-note">* Precio antes de impuestos</div>
+        </div>
+        <div class="pricing-right">
+          <div class="iva-row">Base: $1.100.000 COP</div>
+          <div class="iva-row">IVA (19%): $209.000 COP</div>
+          <div class="total-row">Total: $1.309.000 COP</div>
+          <div class="validity-badge">Vigencia: 30 días</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONDICIONES -->
+    <section>
+      <h2>Condiciones Comerciales</h2>
+      <ul class="conditions-list">
+        <li>
+          <span class="cond-label">Modalidad de pago</span>
+          Mensual anticipado (primero de cada mes)
+        </li>
+        <li>
+          <span class="cond-label">Forma de pago</span>
+          Transferencia bancaria / Nequi / Bancolombia
+        </li>
+        <li>
+          <span class="cond-label">Permanencia mínima</span>
+          Sin permanencia — cancelación con 15 días de aviso
+        </li>
+        <li>
+          <span class="cond-label">Actualizaciones</span>
+          Incluidas durante toda la suscripción activa
+        </li>
+        <li>
+          <span class="cond-label">Soporte</span>
+          Tiempo de respuesta máximo de 24 horas hábiles
+        </li>
+        <li>
+          <span class="cond-label">Facturación</span>
+          Factura electrónica expedida por Ser Stacks
+        </li>
+      </ul>
+    </section>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div>
+        <div class="from-label">Presentado por</div>
+        <div class="from-name">Ser Stacks</div>
+        <div style="font-size:11px; color:#888; margin-top:3px;">
+          Soluciones digitales a medida
+        </div>
+      </div>
+      <div class="signature-block">
+        <div class="signature-line"></div>
+        <div class="signature-text">Firma y aceptación – Chaopelos</div>
+        <div style="font-size:11px; color:#aaa; margin-top:4px;">
+          Fecha de aceptación: ___/___/______
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
