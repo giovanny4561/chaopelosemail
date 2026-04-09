@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Ensure popup is always fully visible and on top
     lockPopup.style.cssText =
-      'position:fixed!important;inset:0!important;background:rgba(0,0,0,0.92)!important;' +
+      'position:fixed!important;inset:0!important;background:rgba(10,10,20,0.55)!important;' +
       'z-index:2147483647!important;display:flex!important;align-items:center!important;' +
-      'justify-content:center!important;backdrop-filter:blur(10px)!important;' +
+      'justify-content:center!important;backdrop-filter:blur(3px) brightness(0.6)!important;' +
       'visibility:visible!important;opacity:1!important;pointer-events:all!important;';
 
     // Block underlying app interaction
