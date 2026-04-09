@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }));
 
       loginError.classList.add('hidden');
-      showApp(role);
+      showApp();
     } else {
       // Wrong password
       loginError.classList.remove('hidden');
