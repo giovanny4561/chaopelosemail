@@ -5,30 +5,86 @@ import { renderGlobalMetrics } from './ui.js';
 const SESSION_KEY = 'canvaToSalesforce_auth';
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 1 week
 
+// ─── SYSTEM LOCK ────────────────────────────────────────────────────────────
+// Set to false to re-enable the system
+const SYSTEM_DISABLED = true;
+// ────────────────────────────────────────────────────────────────────────────
+
 document.addEventListener('DOMContentLoaded', () => {
   const viewLogin = document.getElementById('view-login');
   const viewApp = document.getElementById('view-app');
   const loginForm = document.getElementById('login-form');
   const passwordInput = document.getElementById('password');
   const loginError = document.getElementById('login-error');
+  const loginBtn = document.getElementById('btn-login');
+  const lockPopup = document.getElementById('migration-notice-popup');
 
-  // Migration notice popup (once per day)
-  const migrationPopup = document.getElementById('migration-notice-popup');
-  const closeMigrationBtn = document.getElementById('btn-close-migration');
+  // ── Lock enforcement ──────────────────────────────────────────────────────
+  function enforceLock() {
+    if (!SYSTEM_DISABLED) return;
 
-  function showMigrationPopupIfNeeded() {
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-    const lastShown = localStorage.getItem('migration_notice_date');
-    if (lastShown !== today) {
-      migrationPopup.classList.remove('hidden');
+    // Clear any saved session so re-enabling requires fresh login
+    localStorage.removeItem(SESSION_KEY);
+
+    // If popup was removed from DOM (DevTools), replace entire body content
+    if (!document.getElementById('migration-notice-popup')) {
+      document.body.innerHTML =
+        '<div style="position:fixed;inset:0;background:#0f172a;display:flex;flex-direction:column;' +
+        'align-items:center;justify-content:center;color:#f87171;font-family:sans-serif;text-align:center;padding:2rem;">' +
+        '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" style="margin-bottom:1rem">' +
+        '<rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="#f87171" stroke-width="2"/>' +
+        '<path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#f87171" stroke-width="2"/></svg>' +
+        '<h2 style="font-size:1.5rem;margin-bottom:0.75rem">Sistema Desactivado</h2>' +
+        '<p style="color:#94a3b8;margin-bottom:0.5rem">giovannymarin23@gmail.com</p>' +
+        '<p style="color:#94a3b8">WhatsApp: +573006795375</p></div>';
+      return;
+    }
+
+    // Ensure popup is always fully visible and on top
+    lockPopup.style.cssText =
+      'position:fixed!important;inset:0!important;background:rgba(0,0,0,0.92)!important;' +
+      'z-index:2147483647!important;display:flex!important;align-items:center!important;' +
+      'justify-content:center!important;backdrop-filter:blur(10px)!important;' +
+      'visibility:visible!important;opacity:1!important;pointer-events:all!important;';
+
+    // Block underlying app interaction
+    const app = document.getElementById('app');
+    if (app) {
+      app.style.pointerEvents = 'none';
+      app.style.userSelect = 'none';
+    }
+
+    // Keep login button disabled
+    if (loginBtn) {
+      loginBtn.disabled = true;
+      loginBtn.style.opacity = '0.4';
+      loginBtn.style.cursor = 'not-allowed';
     }
   }
 
-  closeMigrationBtn?.addEventListener('click', () => {
-    migrationPopup.classList.add('hidden');
-    const today = new Date().toISOString().slice(0, 10);
-    localStorage.setItem('migration_notice_date', today);
-  });
+  if (SYSTEM_DISABLED) {
+    // Initial enforcement
+    enforceLock();
+
+    // Load metrics into popup cards
+    loadLockMetrics();
+
+    // Watch for DOM mutations (DevTools node removal / style changes)
+    const observer = new MutationObserver(() => enforceLock());
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style']
+    });
+
+    // Belt-and-suspenders: periodic re-check every 500ms
+    setInterval(enforceLock, 500);
+
+    // Stop here — don't run rest of login/app logic
+    return;
+  }
+  // ── End lock ──────────────────────────────────────────────────────────────
 
   function checkSession() {
     const savedSession = localStorage.getItem(SESSION_KEY);
@@ -38,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (now - parsedSession.timestamp < SESSION_DURATION_MS && parsedSession.authenticated === true) {
         return true;
       } else {
-        // Session expired
         localStorage.removeItem(SESSION_KEY);
         return false;
       }
@@ -47,12 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showApp() {
+    if (SYSTEM_DISABLED) return;
     viewLogin.classList.add('hidden');
     viewApp.classList.remove('hidden');
-    initConverter(); // Initialize converter logic only when authenticated
+    initConverter();
     fetchCloudinaryUsage();
     renderGlobalMetrics();
-    showMigrationPopupIfNeeded();
   }
 
   async function fetchCloudinaryUsage() {
@@ -95,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // On Load
   const currentRole = checkSession();
   if (currentRole) {
-    showApp(currentRole);
+    showApp();
   } else {
     showLogin();
   }
@@ -103,19 +158,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle Login Submit
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (SYSTEM_DISABLED) {
+      loginError.classList.remove('hidden');
+      loginError.textContent = 'Sistema desactivado. Contacte al administrador.';
+      passwordInput.value = '';
+      return;
+    }
     const pwd = passwordInput.value;
-
     if (pwd === '777') {
-      // Save successful session timestamp
       localStorage.setItem(SESSION_KEY, JSON.stringify({
         authenticated: true,
         timestamp: Date.now()
       }));
-
       loginError.classList.add('hidden');
       showApp();
     } else {
-      // Wrong password
       loginError.classList.remove('hidden');
       passwordInput.value = '';
       passwordInput.focus();
@@ -123,3 +180,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
+
+// Fetch real metrics from Supabase for the lock popup
+async function loadLockMetrics() {
+  try {
+    const { supabase } = await import('./db.js');
+    const { data } = await supabase.rpc('get_total_metrics');
+    if (data) {
+      setLockKpi(data.total_conversions ?? 28, data.total_images ?? 236, data.total_minutes_saved ?? 944);
+      return;
+    }
+  } catch (_) {
+    // ignore — use hardcoded fallback
+  }
+  setLockKpi(28, 236, 944);
+}
+
+function setLockKpi(uses, images, minutes) {
+  const u = document.getElementById('lock-kpi-uses');
+  const i = document.getElementById('lock-kpi-images');
+  const t = document.getElementById('lock-kpi-time');
+  if (u) u.textContent = uses;
+  if (i) i.textContent = images;
+  if (t) t.textContent = minutes;
+}
