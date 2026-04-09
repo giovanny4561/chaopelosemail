@@ -215,6 +215,11 @@ async function handleFile(file) {
             newHtmlContent = newHtmlContent.replace('<head>', '<head>\n    <meta charset="utf-8">');
         }
 
+        // Inject Salesforce Marketing Cloud open tracking tag before closing body
+        if (!newHtmlContent.includes('<custom name="opencounter"')) {
+            newHtmlContent = newHtmlContent.replace('</body>', '  <custom name="opencounter" type="tracking" />\n</body>');
+        }
+
         updateProgress(95, 'Generando archivo final...');
         // Add UTF-8 BOM (\ufeff) to force browsers and Salesforce to read it correctly
         window.convertedHtmlBlob = new Blob(['\ufeff', newHtmlContent], { type: 'text/html;charset=utf-8' });

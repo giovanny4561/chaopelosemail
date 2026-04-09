@@ -208,6 +208,49 @@
       margin-top: 1px;
     }
 
+    /* TRACKING */
+    .tracking-box {
+      background: #f0fff4;
+      border: 1px solid #9ae6b4;
+      border-left: 4px solid #38a169;
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .tracking-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .tracking-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #276749;
+      margin-bottom: 4px;
+    }
+
+    .tracking-desc {
+      font-size: 12px;
+      color: #444;
+    }
+
+    .tracking-code {
+      display: inline-block;
+      background: #e6ffed;
+      border: 1px solid #9ae6b4;
+      color: #276749;
+      font-family: monospace;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+    }
+
     /* PRICING */
     .pricing-box {
       background: #1a1a2e;
@@ -356,8 +399,8 @@
       </div>
       <div class="doc-meta">
         <strong>Propuesta Comercial</strong>
-        Ref: SS-2025-001<br>
-        Fecha: 9 de abril de 2025<br>
+        Ref: SS-2026-001<br>
+        Fecha: 9 de abril de 2026<br>
         Vigencia: 30 días
       </div>
     </div>
@@ -381,7 +424,8 @@
       <p>
         <strong>Ser Stacks</strong> desarrolló y mantiene una plataforma web que automatiza todo ese flujo de
         extremo a extremo: el usuario sube el ZIP de Canva y en segundos obtiene un HTML listo para usar en
-        Salesforce, sin tocar una sola línea de código.
+        Salesforce, sin tocar una sola línea de código. Adicionalmente, el sistema inyecta automáticamente
+        el fragmento de tracking de apertura requerido por Salesforce Marketing Cloud.
       </p>
     </section>
 
@@ -402,6 +446,7 @@
         <ul>
           <li>Un solo clic: subir el ZIP de Canva</li>
           <li>Imágenes optimizadas y URLs reemplazadas automáticamente</li>
+          <li>Tracking de apertura inyectado automáticamente</li>
           <li>Accesible para cualquier persona del equipo</li>
           <li>Resultado consistente y sin errores</li>
           <li>~1 min por correo procesado</li>
@@ -438,9 +483,27 @@
         <li>HTML listo para Salesforce en segundos</li>
         <li>Alojamiento y almacenamiento en la nube</li>
         <li>Actualizaciones y mejoras del sistema</li>
+        <li>Tracking de apertura Salesforce MC incluido</li>
         <li>Soporte técnico vía WhatsApp / correo</li>
         <li>Sin límite de usuarios en el equipo</li>
       </ul>
+    </section>
+
+    <!-- TRACKING -->
+    <section>
+      <h2>Tracking de Apertura – Salesforce Marketing Cloud</h2>
+      <div class="tracking-box">
+        <div class="tracking-icon">&#128200;</div>
+        <div>
+          <div class="tracking-title">Inyección automática del fragmento de seguimiento</div>
+          <div class="tracking-desc">
+            Salesforce Marketing Cloud requiere que cada plantilla HTML incluya un fragmento especial
+            para registrar cuándo un destinatario abre el correo. El sistema lo agrega automáticamente
+            en cada conversión — sin que el usuario tenga que recordarlo ni hacerlo manualmente.
+          </div>
+          <div class="tracking-code">&lt;custom name="opencounter" type="tracking" /&gt;</div>
+        </div>
+      </div>
     </section>
 
     <!-- PRECIO -->
