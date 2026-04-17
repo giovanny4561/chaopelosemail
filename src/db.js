@@ -27,20 +27,36 @@ export async function logConversionMetrics(imagesCount) {
 
 // Fetch aggregate statistics to display on the success screen
 export async function getGlobalMetrics() {
+    // Try RPC first
     try {
         const { data, error } = await supabase.rpc('get_total_metrics');
-        if (error) throw error;
-
-        if (data && data.length > 0) {
+        if (!error && data && data.length > 0) {
             return {
-                uses: data[0].total_conversions || 0,
-                images: data[0].total_images || 0,
-                minutes: data[0].total_minutes || 0
+                uses: Number(data[0].total_conversions) || 0,
+                images: Number(data[0].total_images) || 0,
+                minutes: Number(data[0].total_minutes) || 0
+            };
+        }
+        if (error) throw error;
+    } catch (err) {
+        console.error('get_total_metrics RPC failed, trying direct query:', err);
+    }
+
+    // Fallback: direct table query (works even if RPC doesn't exist yet)
+    try {
+        const { data: rows, error } = await supabase
+            .from('conversion_metrics')
+            .select('images_processed, minutes_saved');
+        if (!error && rows) {
+            return {
+                uses: rows.length,
+                images: rows.reduce((s, r) => s + (Number(r.images_processed) || 0), 0),
+                minutes: rows.reduce((s, r) => s + (Number(r.minutes_saved) || 0), 0)
             };
         }
     } catch (err) {
-        console.error('Error fetching global metrics:', err);
+        console.error('Direct table query also failed:', err);
     }
 
-    return { uses: '--', images: '--', minutes: '--' };
+    return { uses: 0, images: 0, minutes: 0 };
 }
