@@ -35,7 +35,7 @@ export async function renderGlobalMetrics() {
     kpiUses.textContent = metrics?.uses ?? '0';
     kpiImages.textContent = metrics?.images ?? '0';
     const mins = Number(metrics?.minutes);
-    kpiTime.textContent = isNaN(mins) ? '--' : Math.round(mins / 60);
+    kpiTime.textContent = isNaN(mins) ? '0' : mins;
 }
 
 // UI Feedback
