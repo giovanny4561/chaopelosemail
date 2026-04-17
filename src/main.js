@@ -3,13 +3,11 @@ import { initConverter } from './converter.js';
 import { renderGlobalMetrics } from './ui.js';
 
 const SESSION_KEY      = 'canvaToSalesforce_auth';
-const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
+const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000;
 
-// ─── SYSTEM LOCK ────────────────────────────────────────────────────────────
-// Set to false to re-enable the system
-const SYSTEM_DISABLED = true;
-let cachedPopupHTML = null;
-// ────────────────────────────────────────────────────────────────────────────
+// Trial: 17/04/2026 12:00 PM Colombia (UTC-5) + 72h
+const TRIAL_START    = new Date('2026-04-17T12:00:00-05:00').getTime();
+const TRIAL_DURATION = 72 * 60 * 60 * 1000;
 
 document.addEventListener('DOMContentLoaded', () => {
   const viewLogin     = document.getElementById('view-login');
@@ -17,63 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm     = document.getElementById('login-form');
   const passwordInput = document.getElementById('password');
   const loginError    = document.getElementById('login-error');
-  const loginBtn      = document.getElementById('btn-login');
-  const lockPopup     = document.getElementById('migration-notice-popup');
 
-  // ── Lock enforcement ──────────────────────────────────────────────────────
-  function enforceLock() {
-    if (!SYSTEM_DISABLED) return;
-
-    localStorage.removeItem(SESSION_KEY);
-
-    const existingPopup = document.getElementById('migration-notice-popup');
-
-    if (existingPopup && !cachedPopupHTML) {
-      cachedPopupHTML = existingPopup.outerHTML;
-    }
-
-    if (!existingPopup) {
-      if (cachedPopupHTML) {
-        document.body.insertAdjacentHTML('beforeend', cachedPopupHTML);
-      }
-      return;
-    }
-
-    existingPopup.style.cssText =
-      'position:fixed!important;inset:0!important;background:rgba(10,10,20,0.55)!important;' +
-      'z-index:2147483647!important;display:flex!important;align-items:center!important;' +
-      'justify-content:center!important;backdrop-filter:blur(3px) brightness(0.6)!important;' +
-      'visibility:visible!important;opacity:1!important;pointer-events:all!important;';
-
-    const app = document.getElementById('app');
-    if (app) {
-      app.style.pointerEvents = 'none';
-      app.style.userSelect = 'none';
-    }
-
-    if (loginBtn) {
-      loginBtn.disabled = true;
-      loginBtn.style.opacity = '0.4';
-      loginBtn.style.cursor = 'not-allowed';
-    }
-  }
-
-  if (SYSTEM_DISABLED) {
-    enforceLock();
-    loadLockMetrics();
-
-    const observer = new MutationObserver(() => enforceLock());
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['class', 'style', 'hidden', 'disabled']
-    });
-
-    setInterval(enforceLock, 500);
-    return;
-  }
-  // ── End lock ──────────────────────────────────────────────────────────────
+  startTrialCountdown();
 
   function getSession() {
     try {
@@ -92,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showApp() {
-    if (SYSTEM_DISABLED) return;
     viewLogin.classList.add('hidden');
     viewApp.classList.remove('hidden');
     initConverter();
@@ -145,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (SYSTEM_DISABLED) return;
     loginError.classList.add('hidden');
 
     if (passwordInput.value !== '777') {
@@ -164,20 +105,28 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Fetch real metrics from Supabase for the lock popup
-async function loadLockMetrics() {
-  try {
-    const { getGlobalMetrics } = await import('./db.js');
-    const metrics = await getGlobalMetrics();
-    if (metrics && metrics.uses !== '--') {
-      const u = document.getElementById('lock-kpi-uses');
-      const i = document.getElementById('lock-kpi-images');
-      const t = document.getElementById('lock-kpi-time');
-      if (u) u.textContent = metrics.uses;
-      if (i) i.textContent = metrics.images;
-      if (t) t.textContent = metrics.minutes;
+function startTrialCountdown() {
+  const el = document.getElementById('trial-countdown');
+  if (!el) return;
+
+  const render = () => {
+    const remaining = TRIAL_START + TRIAL_DURATION - Date.now();
+
+    if (remaining <= 0) {
+      el.textContent = 'Expirada';
+      el.style.color = '#f87171';
+      return true;
     }
-  } catch (_) {
-    // HTML already shows hardcoded fallback values (28 / 236 / 944)
-  }
+
+    const totalSeconds = Math.floor(remaining / 1000);
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    el.textContent = `${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
+    el.style.color = remaining < 6 * 60 * 60 * 1000 ? '#fbbf24' : '#34d399';
+    return false;
+  };
+
+  if (render()) return;
+  const id = setInterval(() => { if (render()) clearInterval(id); }, 1000);
 }
