@@ -184,16 +184,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // Fetch real metrics from Supabase for the lock popup
 async function loadLockMetrics() {
   try {
-    const { supabase } = await import('./db.js');
-    const { data } = await supabase.rpc('get_total_metrics');
-    if (data) {
-      setLockKpi(data.total_conversions ?? 28, data.total_images ?? 236, data.total_minutes_saved ?? 944);
+    const { getGlobalMetrics } = await import('./db.js');
+    const metrics = await getGlobalMetrics();
+    if (metrics && metrics.uses !== '--') {
+      setLockKpi(metrics.uses, metrics.images, metrics.minutes);
       return;
     }
   } catch (_) {
-    // ignore — use hardcoded fallback
+    // ignore — HTML already shows hardcoded fallback values
   }
-  setLockKpi(28, 236, 944);
 }
 
 function setLockKpi(uses, images, minutes) {
