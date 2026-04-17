@@ -8,6 +8,7 @@ const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 // ─── SYSTEM LOCK ────────────────────────────────────────────────────────────
 // Set to false to re-enable the system
 const SYSTEM_DISABLED = true;
+let cachedPopupHTML = null;
 // ────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,20 +26,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     localStorage.removeItem(SESSION_KEY);
 
-    if (!document.getElementById('migration-notice-popup')) {
-      document.body.innerHTML =
-        '<div style="position:fixed;inset:0;background:#0f172a;display:flex;flex-direction:column;' +
-        'align-items:center;justify-content:center;color:#f87171;font-family:sans-serif;text-align:center;padding:2rem;">' +
-        '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" style="margin-bottom:1rem">' +
-        '<rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="#f87171" stroke-width="2"/>' +
-        '<path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#f87171" stroke-width="2"/></svg>' +
-        '<h2 style="font-size:1.5rem;margin-bottom:0.75rem">Sistema Desactivado</h2>' +
-        '<p style="color:#94a3b8;margin-bottom:0.5rem">giovannymarin23@gmail.com</p>' +
-        '<p style="color:#94a3b8">WhatsApp: +573006795375</p></div>';
+    const existingPopup = document.getElementById('migration-notice-popup');
+
+    if (existingPopup && !cachedPopupHTML) {
+      cachedPopupHTML = existingPopup.outerHTML;
+    }
+
+    if (!existingPopup) {
+      if (cachedPopupHTML) {
+        document.body.insertAdjacentHTML('beforeend', cachedPopupHTML);
+      }
       return;
     }
 
-    lockPopup.style.cssText =
+    existingPopup.style.cssText =
       'position:fixed!important;inset:0!important;background:rgba(10,10,20,0.55)!important;' +
       'z-index:2147483647!important;display:flex!important;align-items:center!important;' +
       'justify-content:center!important;backdrop-filter:blur(3px) brightness(0.6)!important;' +
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ['class', 'style']
+      attributeFilter: ['class', 'style', 'hidden', 'disabled']
     });
 
     setInterval(enforceLock, 500);
