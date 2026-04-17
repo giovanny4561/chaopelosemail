@@ -31,7 +31,6 @@ export async function getGlobalMetrics() {
         const { data, error } = await supabase.rpc('get_total_metrics');
         if (error) throw error;
 
-        // rpc returns an array of objects
         if (data && data.length > 0) {
             return {
                 uses: data[0].total_conversions || 0,
@@ -43,6 +42,5 @@ export async function getGlobalMetrics() {
         console.error('Error fetching global metrics:', err);
     }
 
-    // Fallback if network fails
     return { uses: '--', images: '--', minutes: '--' };
 }
