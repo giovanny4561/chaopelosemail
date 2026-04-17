@@ -34,7 +34,8 @@ export async function renderGlobalMetrics() {
 
     kpiUses.textContent = metrics?.uses || '0';
     kpiImages.textContent = metrics?.images || '0';
-    kpiTime.textContent = metrics?.minutes || '0';
+    const hours = metrics?.minutes ? Math.round(metrics.minutes / 60) : 0;
+    kpiTime.textContent = hours;
 }
 
 // UI Feedback

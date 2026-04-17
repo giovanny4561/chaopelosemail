@@ -2,8 +2,8 @@ import './style.css';
 import { initConverter } from './converter.js';
 import { renderGlobalMetrics } from './ui.js';
 
-const SESSION_KEY = 'canvaToSalesforce_auth';
-const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 1 week
+const SESSION_KEY      = 'canvaToSalesforce_auth';
+const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 // ─── SYSTEM LOCK ────────────────────────────────────────────────────────────
 // Set to false to re-enable the system
@@ -11,22 +11,20 @@ const SYSTEM_DISABLED = true;
 // ────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  const viewLogin = document.getElementById('view-login');
-  const viewApp = document.getElementById('view-app');
-  const loginForm = document.getElementById('login-form');
+  const viewLogin     = document.getElementById('view-login');
+  const viewApp       = document.getElementById('view-app');
+  const loginForm     = document.getElementById('login-form');
   const passwordInput = document.getElementById('password');
-  const loginError = document.getElementById('login-error');
-  const loginBtn = document.getElementById('btn-login');
-  const lockPopup = document.getElementById('migration-notice-popup');
+  const loginError    = document.getElementById('login-error');
+  const loginBtn      = document.getElementById('btn-login');
+  const lockPopup     = document.getElementById('migration-notice-popup');
 
   // ── Lock enforcement ──────────────────────────────────────────────────────
   function enforceLock() {
     if (!SYSTEM_DISABLED) return;
 
-    // Clear any saved session so re-enabling requires fresh login
     localStorage.removeItem(SESSION_KEY);
 
-    // If popup was removed from DOM (DevTools), replace entire body content
     if (!document.getElementById('migration-notice-popup')) {
       document.body.innerHTML =
         '<div style="position:fixed;inset:0;background:#0f172a;display:flex;flex-direction:column;' +
@@ -40,21 +38,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Ensure popup is always fully visible and on top
     lockPopup.style.cssText =
       'position:fixed!important;inset:0!important;background:rgba(10,10,20,0.55)!important;' +
       'z-index:2147483647!important;display:flex!important;align-items:center!important;' +
       'justify-content:center!important;backdrop-filter:blur(3px) brightness(0.6)!important;' +
       'visibility:visible!important;opacity:1!important;pointer-events:all!important;';
 
-    // Block underlying app interaction
     const app = document.getElementById('app');
     if (app) {
       app.style.pointerEvents = 'none';
       app.style.userSelect = 'none';
     }
 
-    // Keep login button disabled
     if (loginBtn) {
       loginBtn.disabled = true;
       loginBtn.style.opacity = '0.4';
@@ -63,13 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (SYSTEM_DISABLED) {
-    // Initial enforcement
     enforceLock();
-
-    // Load metrics into popup cards
     loadLockMetrics();
 
-    // Watch for DOM mutations (DevTools node removal / style changes)
     const observer = new MutationObserver(() => enforceLock());
     observer.observe(document.body, {
       childList: true,
@@ -78,27 +69,25 @@ document.addEventListener('DOMContentLoaded', () => {
       attributeFilter: ['class', 'style']
     });
 
-    // Belt-and-suspenders: periodic re-check every 500ms
     setInterval(enforceLock, 500);
-
-    // Stop here — don't run rest of login/app logic
     return;
   }
   // ── End lock ──────────────────────────────────────────────────────────────
 
-  function checkSession() {
-    const savedSession = localStorage.getItem(SESSION_KEY);
-    if (savedSession) {
-      const parsedSession = JSON.parse(savedSession);
-      const now = Date.now();
-      if (now - parsedSession.timestamp < SESSION_DURATION_MS && parsedSession.authenticated === true) {
-        return true;
-      } else {
-        localStorage.removeItem(SESSION_KEY);
-        return false;
-      }
+  function getSession() {
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      localStorage.removeItem(SESSION_KEY);
+      return null;
     }
-    return false;
+  }
+
+  function sessionValid(s) {
+    if (!s?.authenticated) return false;
+    if (Date.now() - s.timestamp >= SESSION_DURATION) return false;
+    return true;
   }
 
   function showApp() {
@@ -110,75 +99,68 @@ document.addEventListener('DOMContentLoaded', () => {
     renderGlobalMetrics();
   }
 
-  async function fetchCloudinaryUsage() {
-    const badge = document.getElementById('quota-badge');
-    const textElement = document.getElementById('quota-text');
-
-    badge.classList.remove('hidden');
-    textElement.textContent = 'Cargando...';
-
-    try {
-      const response = await fetch('/api/usage');
-      if (response.ok) {
-        const data = await response.json();
-        textElement.textContent = `${data.usageGB} GB / ${data.limitGB} GB (${data.percentage}%)`;
-
-        if (parseFloat(data.percentage) > 90) {
-          textElement.style.color = '#ff5252';
-        } else if (parseFloat(data.percentage) > 75) {
-          textElement.style.color = '#fbbf24';
-        } else {
-          textElement.style.color = 'inherit';
-        }
-      } else {
-        console.warn('Failed to fetch usage:', await response.text());
-        textElement.textContent = 'Disp. (Vercel Req.)';
-      }
-    } catch (err) {
-      console.error('Error fetching usage:', err);
-      textElement.textContent = 'Disp. (Vercel Req.)';
-    }
-  }
-
-  window.fetchCloudinaryUsage = fetchCloudinaryUsage;
-
   function showLogin() {
     viewLogin.classList.remove('hidden');
     viewApp.classList.add('hidden');
   }
 
-  // On Load
-  const currentRole = checkSession();
-  if (currentRole) {
+  async function fetchCloudinaryUsage() {
+    const badge = document.getElementById('quota-badge');
+    const text  = document.getElementById('quota-text');
+    badge.classList.remove('hidden');
+    text.textContent = 'Cargando...';
+    try {
+      const res = await fetch('/api/usage');
+      if (res.ok) {
+        const d = await res.json();
+        text.textContent = `${d.usageGB} GB / ${d.limitGB} GB (${d.percentage}%)`;
+        text.style.color =
+          parseFloat(d.percentage) > 90 ? '#ff5252' :
+          parseFloat(d.percentage) > 75 ? '#fbbf24' : 'inherit';
+      } else {
+        text.textContent = 'Disp. (Vercel Req.)';
+      }
+    } catch {
+      text.textContent = 'Disp. (Vercel Req.)';
+    }
+  }
+
+  window.fetchCloudinaryUsage = fetchCloudinaryUsage;
+
+  window.logout = () => {
+    localStorage.removeItem(SESSION_KEY);
+    showLogin();
+    loginError.classList.add('hidden');
+    passwordInput.value = '';
+  };
+
+  const session = getSession();
+  if (sessionValid(session)) {
     showApp();
   } else {
+    if (session) localStorage.removeItem(SESSION_KEY);
     showLogin();
   }
 
-  // Handle Login Submit
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (SYSTEM_DISABLED) {
-      loginError.classList.remove('hidden');
-      loginError.textContent = 'Sistema desactivado. Contacte al administrador.';
-      passwordInput.value = '';
-      return;
-    }
-    const pwd = passwordInput.value;
-    if (pwd === '777') {
-      localStorage.setItem(SESSION_KEY, JSON.stringify({
-        authenticated: true,
-        timestamp: Date.now()
-      }));
-      loginError.classList.add('hidden');
-      showApp();
-    } else {
+    if (SYSTEM_DISABLED) return;
+    loginError.classList.add('hidden');
+
+    if (passwordInput.value !== '777') {
+      loginError.textContent = 'Contraseña incorrecta.';
       loginError.classList.remove('hidden');
       passwordInput.value = '';
       passwordInput.focus();
+      return;
     }
-  });
 
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      authenticated: true,
+      timestamp: Date.now(),
+    }));
+    showApp();
+  });
 });
 
 // Fetch real metrics from Supabase for the lock popup
@@ -187,19 +169,14 @@ async function loadLockMetrics() {
     const { getGlobalMetrics } = await import('./db.js');
     const metrics = await getGlobalMetrics();
     if (metrics && metrics.uses !== '--') {
-      setLockKpi(metrics.uses, metrics.images, metrics.minutes);
-      return;
+      const u = document.getElementById('lock-kpi-uses');
+      const i = document.getElementById('lock-kpi-images');
+      const t = document.getElementById('lock-kpi-time');
+      if (u) u.textContent = metrics.uses;
+      if (i) i.textContent = metrics.images;
+      if (t) t.textContent = metrics.minutes;
     }
   } catch (_) {
-    // ignore — HTML already shows hardcoded fallback values
+    // HTML already shows hardcoded fallback values (28 / 236 / 944)
   }
-}
-
-function setLockKpi(uses, images, minutes) {
-  const u = document.getElementById('lock-kpi-uses');
-  const i = document.getElementById('lock-kpi-images');
-  const t = document.getElementById('lock-kpi-time');
-  if (u) u.textContent = uses;
-  if (i) i.textContent = images;
-  if (t) t.textContent = minutes;
 }
