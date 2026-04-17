@@ -1,14 +1,14 @@
 :root {
-  --bg-color: #0d1117;
-  --panel-bg: rgba(22, 27, 34, 0.6);
-  --border-color: rgba(255, 255, 255, 0.1);
-  --text-primary: #f0f6fc;
-  --text-secondary: #8b949e;
-  --primary-color: #58a6ff;
-  --primary-hover: #3182ce;
-  --success-color: #238636;
-  --error-color: #f85149;
-  --blur: blur(16px);
+  --bg-color: #f0f4ff;
+  --panel-bg: rgba(255, 255, 255, 0.9);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --primary-color: #6d28d9;
+  --primary-hover: #5b21b6;
+  --success-color: #059669;
+  --error-color: #dc2626;
+  --blur: blur(20px);
   --radius: 16px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -46,7 +46,7 @@ body {
 .blob {
   position: absolute;
   filter: blur(80px);
-  opacity: 0.4;
+  opacity: 0.35;
   border-radius: 50%;
   animation: float 20s ease-in-out infinite alternate;
 }
@@ -56,7 +56,7 @@ body {
   left: -10%;
   width: 50vw;
   height: 50vw;
-  background: radial-gradient(circle, rgba(88, 166, 255, 0.4) 0%, rgba(13, 17, 23, 0) 70%);
+  background: radial-gradient(circle, rgba(109, 40, 217, 0.25) 0%, rgba(240, 244, 255, 0) 70%);
 }
 
 .blob-2 {
@@ -64,22 +64,14 @@ body {
   right: -10%;
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(circle, rgba(163, 113, 247, 0.3) 0%, rgba(13, 17, 23, 0) 70%);
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, rgba(240, 244, 255, 0) 70%);
   animation-delay: -10s;
 }
 
 @keyframes float {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(5%, 10%) scale(1.1);
-  }
-
-  100% {
-    transform: translate(-5%, 5%) scale(0.9);
-  }
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(5%, 10%) scale(1.1); }
+  100% { transform: translate(-5%, 5%) scale(0.9); }
 }
 
 /* App Container */
@@ -132,7 +124,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   padding: 2.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 24px rgba(109, 40, 217, 0.07), 0 1px 4px rgba(0,0,0,0.06);
   transition: var(--transition);
 }
 
@@ -167,8 +159,8 @@ input[type="email"],
 input[type="password"] {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: rgba(1, 4, 9, 0.3);
-  border: 1px solid var(--border-color);
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   color: var(--text-primary);
   font-family: inherit;
@@ -179,7 +171,7 @@ input[type="password"] {
 input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.15);
 }
 
 .btn {
@@ -206,21 +198,22 @@ input:focus {
 .btn-primary:hover:not(:disabled) {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
 }
 
 .btn-primary:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .btn-secondary {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(0, 0, 0, 0.09);
 }
 
 .btn-text {
@@ -241,11 +234,11 @@ input:focus {
 
 /* Upload Area */
 .upload-area {
-  border: 2px dashed var(--border-color);
+  border: 2px dashed rgba(109, 40, 217, 0.25);
   border-radius: var(--radius);
   padding: 3rem 2rem;
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: rgba(109, 40, 217, 0.03);
   transition: var(--transition);
   cursor: pointer;
 }
@@ -253,7 +246,7 @@ input:focus {
 .upload-area:hover,
 .upload-area.drag-active {
   border-color: var(--primary-color);
-  background-color: rgba(88, 166, 255, 0.05);
+  background-color: rgba(109, 40, 217, 0.06);
 }
 
 .upload-icon {
@@ -290,7 +283,7 @@ input:focus {
 
 .progress-bar-bg {
   height: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.5rem;
@@ -299,7 +292,7 @@ input:focus {
 .progress-bar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--primary-color), #a371f7);
+  background: linear-gradient(90deg, var(--primary-color), #7c3aed);
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -323,10 +316,8 @@ input:focus {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid transparent;
-  /* Remove heavy borders */
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 0.75rem;
   color: var(--text-secondary);
@@ -334,24 +325,23 @@ input:focus {
   font-size: 0.85rem;
 }
 
-.step:last-child {
-  border-bottom: 1px solid transparent;
-}
-
 .step-icon {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid var(--text-secondary);
+  border: 2px solid rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
 }
 
 .step.active {
   color: var(--text-primary);
   font-weight: 500;
+  background: rgba(109, 40, 217, 0.05);
+  border-color: rgba(109, 40, 217, 0.2);
 }
 
 .step.active .step-icon {
@@ -369,6 +359,8 @@ input:focus {
 
 .step.done {
   color: var(--text-primary);
+  background: rgba(5, 150, 105, 0.05);
+  border-color: rgba(5, 150, 105, 0.2);
 }
 
 .step.done .step-icon {
@@ -398,10 +390,10 @@ input:focus {
   color: var(--text-secondary);
   font-size: 0.875rem;
   margin-bottom: 1rem;
-  background-color: rgba(35, 134, 54, 0.1);
+  background-color: rgba(5, 150, 105, 0.08);
   padding: 0.75rem;
   border-radius: 8px;
-  border: 1px solid rgba(35, 134, 54, 0.2);
+  border: 1px solid rgba(5, 150, 105, 0.2);
 }
 
 .success-actions {
@@ -422,8 +414,8 @@ input:focus {
   font-size: 0.875rem;
   margin-top: 0.75rem;
   padding: 0.75rem;
-  background-color: rgba(248, 81, 73, 0.1);
-  border: 1px solid rgba(248, 81, 73, 0.2);
+  background-color: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
   border-radius: 6px;
 }
 
@@ -436,55 +428,26 @@ input:focus {
 
 /* Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes popIn {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-
-  80% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  0%   { transform: scale(0.5); opacity: 0; }
+  80%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-
-  100% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
+  0%   { transform: scale(0.8); opacity: 0.5; }
+  50%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.5; }
 }
 
 .loader {
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(0, 0, 0, 0.15);
   border-radius: 50%;
-  border-top: 2px solid #fff;
+  border-top: 2px solid var(--primary-color);
   width: 20px;
   height: 20px;
   animation: spin 1s linear infinite;
@@ -492,13 +455,8 @@ input:focus {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Responsive */
@@ -509,5 +467,9 @@ input:focus {
 
   .upload-area {
     padding: 2rem 1rem;
+  }
+
+  .steps-list {
+    grid-template-columns: 1fr;
   }
 }

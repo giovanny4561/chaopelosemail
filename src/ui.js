@@ -32,10 +32,10 @@ export async function renderGlobalMetrics() {
 
     const metrics = await getGlobalMetrics();
 
-    kpiUses.textContent = metrics?.uses || '0';
-    kpiImages.textContent = metrics?.images || '0';
-    const hours = metrics?.minutes ? Math.round(metrics.minutes / 60) : 0;
-    kpiTime.textContent = hours;
+    kpiUses.textContent = metrics?.uses ?? '0';
+    kpiImages.textContent = metrics?.images ?? '0';
+    const mins = Number(metrics?.minutes);
+    kpiTime.textContent = isNaN(mins) ? '--' : Math.round(mins / 60);
 }
 
 // UI Feedback

@@ -22,7 +22,7 @@
   <div id="app">
     <!-- Trial Countdown Banner -->
     <div id="trial-banner"
-      style="display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;background:linear-gradient(90deg,rgba(139,92,246,0.18),rgba(52,211,153,0.18));border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.65rem 1rem;margin-bottom:1rem;font-size:0.85rem;color:var(--text-primary);backdrop-filter:blur(10px);width:100%;box-sizing:border-box;">
+      style="display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;background:linear-gradient(90deg,rgba(109,40,217,0.08),rgba(52,211,153,0.08));border:1px solid rgba(109,40,217,0.15);border-radius:12px;padding:0.65rem 1rem;margin-bottom:1rem;font-size:0.85rem;color:var(--text-primary);backdrop-filter:blur(10px);width:100%;box-sizing:border-box;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
         <circle cx="12" cy="12" r="9" stroke="#a371f7" stroke-width="2" />
         <path d="M12 7v5l3 2" stroke="#a371f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -48,7 +48,7 @@
 
       <!-- Usage Quota Badge -->
       <div id="quota-badge" class="hidden"
-        style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem 1rem; border-radius: 99px; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; backdrop-filter: blur(10px); white-space: nowrap;">
+        style="background: rgba(109,40,217,0.08); border: 1px solid rgba(109,40,217,0.2); padding: 0.5rem 1rem; border-radius: 99px; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; backdrop-filter: blur(10px); white-space: nowrap; color: var(--text-primary);">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
           style="flex-shrink: 0;">
           <path d="M20.5 13L20.5 10C20.5 7.79086 16.6944 6 12 6C7.30558 6 3.5 7.79086 3.5 10L3.5 13"
@@ -78,7 +78,7 @@
             <input type="password" id="password" required placeholder="••••••••" autofocus>
           </div>
           <button type="submit" class="btn btn-primary" id="btn-login" style="width: 100%;">
-            <span class="btn-text">Ingresar</span>
+            Ingresar
           </button>
           <div id="login-error" class="error-message hidden" style="margin-top: 1rem;"></div>
         </form>
@@ -100,22 +100,22 @@
         <div class="kpi-grid" id="kpi-dashboard"
           style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; opacity: 1; transition: opacity 0.5s ease;">
           <div class="kpi-card"
-            style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
+            style="background: rgba(109,40,217,0.04); border: 1px solid rgba(109,40,217,0.12); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
             <span style="font-size: 1.5rem; color: var(--primary-color);" id="kpi-uses">--</span>
             <span
               style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Usos
               Globales</span>
           </div>
           <div class="kpi-card"
-            style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
+            style="background: rgba(109,40,217,0.04); border: 1px solid rgba(109,40,217,0.12); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
             <span style="font-size: 1.5rem; color: #a371f7;" id="kpi-images">--</span>
             <span
               style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Imágenes
               Total</span>
           </div>
           <div class="kpi-card"
-            style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
-            <span style="font-size: 1.5rem; color: #34d399;" id="kpi-time">--</span>
+            style="background: rgba(109,40,217,0.04); border: 1px solid rgba(109,40,217,0.12); padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem;">
+            <span style="font-size: 1.5rem; color: #059669;" id="kpi-time">--</span>
             <span
               style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Horas
               Ahorradas</span>
