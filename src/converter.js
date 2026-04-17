@@ -216,8 +216,15 @@ async function handleFile(file) {
         }
 
         // Inject Salesforce Marketing Cloud open tracking tag before closing body
-        if (!newHtmlContent.includes('<custom name="opencounter"')) {
-            newHtmlContent = newHtmlContent.replace('</body>', '  <custom name="opencounter" type="tracking" />\n</body>');
+        if (!newHtmlContent.toLowerCase().includes('<custom name="opencounter"')) {
+            const trackingTag = '  <custom name="opencounter" type="tracking" />\n';
+            const bodyClose = newHtmlContent.match(/<\/body>/i);
+            if (bodyClose) {
+                newHtmlContent = newHtmlContent.replace(/<\/body>/i, trackingTag + '</body>');
+            } else {
+                // No </body> tag — append at end
+                newHtmlContent += '\n' + trackingTag;
+            }
         }
 
         updateProgress(95, 'Generando archivo final...');
