@@ -5,9 +5,10 @@ import { renderGlobalMetrics } from './ui.js';
 const SESSION_KEY      = 'canvaToSalesforce_auth';
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000;
 
-// Trial: 17/04/2026 12:00 PM Colombia (UTC-5) + 72h
-const TRIAL_START    = new Date('2026-04-17T12:00:00-05:00').getTime();
-const TRIAL_DURATION = 72 * 60 * 60 * 1000;
+// ─── SYSTEM LOCK ────────────────────────────────────────────────────────────
+// Set to false to re-enable the system
+const SYSTEM_DISABLED = true;
+// ────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
   const viewLogin     = document.getElementById('view-login');
@@ -15,23 +16,73 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm     = document.getElementById('login-form');
   const passwordInput = document.getElementById('password');
   const loginError    = document.getElementById('login-error');
+  const loginBtn      = document.getElementById('btn-login');
+  const lockPopup     = document.getElementById('migration-notice-popup');
 
-  startTrialCountdown();
+  // ── Lock enforcement ──────────────────────────────────────────────────────
+  function enforceLock() {
+    if (!SYSTEM_DISABLED) return;
 
-  function getSession() {
-    try {
-      const raw = localStorage.getItem(SESSION_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      localStorage.removeItem(SESSION_KEY);
-      return null;
+    localStorage.removeItem(SESSION_KEY);
+
+    if (!document.getElementById('migration-notice-popup')) {
+      document.body.innerHTML =
+        '<div style="position:fixed;inset:0;background:#0f172a;display:flex;flex-direction:column;' +
+        'align-items:center;justify-content:center;color:#f87171;font-family:sans-serif;text-align:center;padding:2rem;">' +
+        '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" style="margin-bottom:1rem">' +
+        '<rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="#f87171" stroke-width="2"/>' +
+        '<path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#f87171" stroke-width="2"/></svg>' +
+        '<h2 style="font-size:1.5rem;margin-bottom:0.75rem">Sistema Desactivado</h2>' +
+        '<p style="color:#94a3b8;margin-bottom:0.5rem">giovannymarin23@gmail.com</p>' +
+        '<p style="color:#94a3b8">WhatsApp: +573006795375</p></div>';
+      return;
+    }
+
+    lockPopup.style.cssText =
+      'position:fixed!important;inset:0!important;background:rgba(10,10,20,0.55)!important;' +
+      'z-index:2147483647!important;display:flex!important;align-items:center!important;' +
+      'justify-content:center!important;backdrop-filter:blur(3px) brightness(0.6)!important;' +
+      'visibility:visible!important;opacity:1!important;pointer-events:all!important;';
+
+    const app = document.getElementById('app');
+    if (app) {
+      app.style.pointerEvents = 'none';
+      app.style.userSelect = 'none';
+    }
+
+    if (loginBtn) {
+      loginBtn.disabled = true;
+      loginBtn.style.opacity = '0.4';
+      loginBtn.style.cursor = 'not-allowed';
     }
   }
 
-  function sessionValid(s) {
-    if (!s?.authenticated) return false;
-    if (Date.now() - s.timestamp >= SESSION_DURATION) return false;
-    return true;
+  if (SYSTEM_DISABLED) {
+    enforceLock();
+    loadLockMetrics();
+
+    const observer = new MutationObserver(() => enforceLock());
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style'],
+    });
+
+    setInterval(enforceLock, 500);
+    return;
+  }
+  // ── End lock ──────────────────────────────────────────────────────────────
+
+  function checkSession() {
+    const saved = localStorage.getItem(SESSION_KEY);
+    if (!saved) return false;
+    try {
+      const s = JSON.parse(saved);
+      if (Date.now() - s.timestamp < SESSION_DURATION && s.authenticated === true) return true;
+    } catch { /* ignore */ }
+    localStorage.removeItem(SESSION_KEY);
+    return false;
   }
 
   function showApp() {
@@ -70,63 +121,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.fetchCloudinaryUsage = fetchCloudinaryUsage;
 
+  checkSession() ? showApp() : showLogin();
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (passwordInput.value === '777') {
+      localStorage.setItem(SESSION_KEY, JSON.stringify({ authenticated: true, timestamp: Date.now() }));
+      loginError.classList.add('hidden');
+      showApp();
+    } else {
+      loginError.classList.remove('hidden');
+      loginError.textContent = 'Contraseña incorrecta.';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  });
+
   window.logout = () => {
     localStorage.removeItem(SESSION_KEY);
     showLogin();
     loginError.classList.add('hidden');
     passwordInput.value = '';
   };
-
-  const session = getSession();
-  if (sessionValid(session)) {
-    showApp();
-  } else {
-    if (session) localStorage.removeItem(SESSION_KEY);
-    showLogin();
-  }
-
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    loginError.classList.add('hidden');
-
-    if (passwordInput.value !== '777') {
-      loginError.textContent = 'Contraseña incorrecta.';
-      loginError.classList.remove('hidden');
-      passwordInput.value = '';
-      passwordInput.focus();
-      return;
-    }
-
-    localStorage.setItem(SESSION_KEY, JSON.stringify({
-      authenticated: true,
-      timestamp: Date.now(),
-    }));
-    showApp();
-  });
 });
 
-function startTrialCountdown() {
-  const el = document.getElementById('trial-countdown');
-  if (!el) return;
-
-  const render = () => {
-    const remaining = TRIAL_START + TRIAL_DURATION - Date.now();
-
-    if (remaining <= 0) {
-      el.textContent = 'Expirada';
-      el.style.color = '#f87171';
-      return true;
+async function loadLockMetrics() {
+  try {
+    const { supabase } = await import('./db.js');
+    const { data } = await supabase.rpc('get_total_metrics');
+    if (data && data.length > 0) {
+      setLockKpi(
+        data[0].total_conversions ?? 28,
+        data[0].total_images ?? 236,
+        Math.round((data[0].total_minutes_saved ?? 944) / 60)
+      );
+      return;
     }
+  } catch { /* use fallback */ }
+  setLockKpi(28, 236, Math.round(944 / 60));
+}
 
-    const totalSeconds = Math.floor(remaining / 1000);
-    const h = Math.floor(totalSeconds / 3600);
-    const m = Math.floor((totalSeconds % 3600) / 60);
-    const s = totalSeconds % 60;
-    el.textContent = `${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
-    el.style.color = remaining < 6 * 60 * 60 * 1000 ? '#fbbf24' : '#34d399';
-    return false;
-  };
-
-  if (render()) return;
-  const id = setInterval(() => { if (render()) clearInterval(id); }, 1000);
+function setLockKpi(uses, images, hours) {
+  const u = document.getElementById('lock-kpi-uses');
+  const i = document.getElementById('lock-kpi-images');
+  const t = document.getElementById('lock-kpi-time');
+  if (u) u.textContent = uses;
+  if (i) i.textContent = images;
+  if (t) t.textContent = hours;
 }
